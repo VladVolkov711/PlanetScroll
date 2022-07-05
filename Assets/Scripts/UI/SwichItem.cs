@@ -2,14 +2,19 @@ using UnityEngine;
 
 public class SwichItem : MonoBehaviour
 {
-    [SerializeField] ScrollingBefore _scrollingBefore;
-    [SerializeField] ScrollingAfter _scrollingAfter;
+    [SerializeField] private ScrollingBefore _scrollingBefore;
+    [SerializeField] private ScrollingAfter _scrollingAfter;
+    [SerializeField] private ListObjectReturn _listObjectReturn;
 
     public void SwichElementInList()
     {
-        _scrollingAfter.SpawnPlanet(ref _scrollingBefore._planetDestroy);
+        Transform obj = 
+            _scrollingAfter.transform.GetChild(_scrollingBefore._planetDestroy.GetComponent<PlanetID>().Id);
 
-        Destroy(_scrollingBefore._planetDestroy, 0.5f);
-        _scrollingBefore.PlanetList.RemoveAt(_scrollingBefore._currentCountInList);
+        _listObjectReturn.ListForReturn. Add(obj.gameObject);
+        _scrollingBefore._planetDestroy.SetActive(false);
+
+        _scrollingAfter.transform.
+            GetChild(_scrollingBefore._planetDestroy.GetComponent<PlanetID>().Id).gameObject.SetActive(true);
     }
 }

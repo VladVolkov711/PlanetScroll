@@ -10,9 +10,9 @@ public class ScrollingBefore : MonoBehaviour
 
     [SerializeField] private int _minScalePos;
     [SerializeField] private int _maxScalePos;
-    private bool _isScroll;
-
     [SerializeField] internal GameObject _planetDestroy;
+    [SerializeField] private ScrollingAfter _scrollingAfter;
+    private bool _isScroll;
 
     internal int _id;
     internal int _currentCountInList;
@@ -22,10 +22,16 @@ public class ScrollingBefore : MonoBehaviour
         for (int i = 0; i < _planetCount; i++)
         {
             GameObject newPlanet = Instantiate(_scrollPlanetPrefab, transform, false);
-            newPlanet.GetComponent<Renderer>().material.color = new Color(Random.value, Random.value, Random.value, 1);
+
+            newPlanet.GetComponent<Renderer>().material.color =
+                                            new Color(Random.value, Random.value, Random.value, 1);
+
             newPlanet.transform.localScale = new Vector2(200, 200);
+
             PlanetList.Add(newPlanet);
             PlanetList[i].GetComponent<PlanetID>().Id = i;
+
+            _scrollingAfter.SpawnPlanet(ref newPlanet);
         }
     }
 
@@ -35,7 +41,8 @@ public class ScrollingBefore : MonoBehaviour
         int newid = 0;
         for (; i < _planetCount; i++)
         {
-            if (PlanetList[i].transform.position.x > _minScalePos && PlanetList[i].transform.position.x < _maxScalePos)
+            if (PlanetList[i] != null && PlanetList[i].transform.position.x > _minScalePos && 
+                                            PlanetList[i].transform.position.x < _maxScalePos)
             {
                 _currentCountInList = i;
                 _id = PlanetList[i].GetComponent<PlanetID>().Id;

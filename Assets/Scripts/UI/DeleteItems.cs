@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class DeleteItems : MonoBehaviour
 {
-    [SerializeField] ScrollingBefore _scrollingBefore;
+    [SerializeField] private ScrollingBefore _scrollingBefore;
+    [SerializeField] private ListObjectReturn _listObjectReturn;
 
     public void DeleteItemInList()
     {
-        Destroy(_scrollingBefore._planetDestroy);
-        _scrollingBefore.PlanetList.RemoveAt(_scrollingBefore._currentCountInList);
+        _listObjectReturn.ListForReturn.Add(_scrollingBefore._planetDestroy);
+        _scrollingBefore._planetDestroy.SetActive(false);
     }
 }

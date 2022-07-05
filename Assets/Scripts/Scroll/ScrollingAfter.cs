@@ -8,8 +8,10 @@ public class ScrollingAfter : MonoBehaviour
     public void SpawnPlanet(ref GameObject obj)
     {
         GameObject objPlanet = Instantiate(obj, transform, false);
-        objPlanet.GetComponent<Renderer>().material.color = obj.GetComponent<Renderer>().material.color;
         objPlanet.transform.localScale = new Vector2(150, 150);
+        objPlanet.GetComponent<Switcheble>().IsSwich = true;
+
         PlanetListAfter.Add(objPlanet);
+        objPlanet.SetActive(false);
     }
 }
