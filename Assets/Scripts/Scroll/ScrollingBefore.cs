@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,14 +9,18 @@ public class ScrollingBefore : MonoBehaviour
     [SerializeField] private GameObject _scrollPlanetPrefab;
     [SerializeField] private int _planetCount = 40;
 
-    [SerializeField] private float _minScalePos;
-    [SerializeField] private float _maxScalePos;
+    //[SerializeField] private float _minScalePos;
+    //[SerializeField] private float _maxScalePos;
 
     [SerializeField] private ScrollingAfter _scrollingAfter;
-    internal GameObject _planetDestroy;
+    [SerializeField] internal GameObject _planetDestroy;
 
     internal int _id;
     internal int _currentCountInList;
+
+    public GameObject scrollbar;
+    private float scroll_pos = 0;
+    public List<float> pos;
 
     private void Awake()
     {
@@ -34,36 +37,46 @@ public class ScrollingBefore : MonoBehaviour
             PlanetList[i].GetComponent<PlanetID>().Id = i;
 
             _scrollingAfter.SpawnPlanet(ref newPlanet);
+            pos.Add(i);
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        int i = 0;
-        int newid = 0;
-        for (; i < _planetCount; i++)
+        float distance = 1f / (pos.Count - 1f);
+        for (int j = 0; j < pos.Count; j++) pos[j] = distance * j;
+
+        if (Input.GetMouseButton(0)) scroll_pos = scrollbar.GetComponent<Scrollbar>().value;
+        else
         {
-            if (PlanetList[i] != null &&
-                    PlanetList[i].transform.position.x > _minScalePos &&
-                            PlanetList[i].transform.position.x < _maxScalePos)
+            for (int i = 0; i < pos.Count; i++)
             {
-                _currentCountInList = i;
-                _id = PlanetList[i].GetComponent<PlanetID>().Id;
-
-                PlanetList[i].transform.localScale = Vector2.Lerp(PlanetList[i].transform.localScale,
-                    new Vector2(300, 300), 0.1f);
-
-                newid = _id;
-
-                if (newid == _id) _planetDestroy = PlanetList[i];
-                else _planetDestroy = null;
-
-            }
-            else
-            {
-                PlanetList[i].transform.localScale = Vector2.Lerp(PlanetList[i].transform.localScale,
-                    new Vector2(200, 200), 0.1f);
+                if (scroll_pos < pos[i] + (distance / 2) && scroll_pos > pos[i] - (distance / 2))
+                {
+                    _planetDestroy = transform.GetChild(i).gameObject;
+                    scrollbar.GetComponent<Scrollbar>().value = Mathf.Lerp(scrollbar.GetComponent<Scrollbar>().value, pos[i], 0.1f);
+                }
             }
         }
+
+        for (int i = 0; i < pos.Count; i++)
+        {
+            if (scroll_pos < pos[i] + (distance / 2) && scroll_pos > pos[i] - (distance / 2))
+            {
+                _planetDestroy = transform.GetChild(i).gameObject;
+                transform.GetChild(i).localScale =
+                    Vector2.Lerp(transform.GetChild(i).localScale, new Vector2(300f, 300f), 0.1f);
+
+                for (int j = 0; j < pos.Count; j++)
+                {
+                    if (j != i)
+                    {
+                        transform.GetChild(j).localScale =
+                            Vector2.Lerp(transform.GetChild(j).localScale, new Vector2(200f, 200f), 0.1f);
+                    }
+                }
+            }
+        }
+
     }
 }

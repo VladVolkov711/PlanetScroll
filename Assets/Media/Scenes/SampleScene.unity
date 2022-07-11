@@ -1785,10 +1785,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlanetList: []
   _scrollPlanetPrefab: {fileID: 4136948880739604255, guid: 5b2f6045b4a023143a725942345c6a24, type: 3}
-  _planetCount: 40
-  _minScalePos: -1.5
-  _maxScalePos: 1.5
+  _planetCount: 20
   _scrollingAfter: {fileID: 743163334}
+  _planetDestroy: {fileID: 0}
+  scrollbar: {fileID: 4959095}
+  pos: []
 --- !u!1 &1910426110
 GameObject:
   m_ObjectHideFlags: 0
